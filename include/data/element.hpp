@@ -8,572 +8,598 @@ namespace Element
 	enum element_e
 	{
 		None = 0,
-
-		Water,
-		Fire,
-		Earth,
-		Air,
-		Steam,
-		Lava,
-		Pressure,
-		Volcano,
-		Sea,
-		Ocean,
-		Energy,
-		Mud,
-		Rain,
-		Dust,
-		Cloud,
-		Storm,
-		Geyser,
-		Isle,
-		Earthquake,
-		Wind,
-		Eruption,
-		Sky,
-		Hurricane,
-		Plant,
-		Gunpowder,
-		Explosion,
-		Stone,
-		Sand,
-		Ash,
-		Coal,
-		Diamond,
-		Glass,
-		Hourglass,
-		Aquarium,
-		Greenhouse,
-		Metal,
-		Rust,
-		Boiler,
-		Bullet,
-		Steel,
-		Time,
-		Tree,
-		Swamp,
-		Life,
-		Plankton,
-		Bird,
-		Phoenix,
-		Human,
-		Egg,
-		Clay,
-		Golem,
-		Pottery,
-		Tool,
-		SteamEngine,
-		Blade,
-		Wood,
-		Axe,
-		Forest,
-		Love,
-		Lumberjack,
-		Train,
-		Steamboat,
-		Campfire,
-		HardRoe,
-		Omelette,
-		Caviar,
-		Turtle,
-		Fish,
-		Lizard,
-		Field,
-		Farmer,
-		House,
-		Livestock,
-		Chicken,
-		Grass,
-		Cow,
-		Milk,
-		Cheese,
-		Moon,
-		Tobacco,
-		Pipe,
-		Wheel,
-		Bicycle,
-		Wheat,
-		Flour,
-		Dough,
-		Bread,
-		Fruit,
-		Pie,
-		Meat,
-		Sandwich,
-		Smoke,
-		Ham,
-		Gun,
-		Corpse,
-		Zombie,
-		Coffin,
-		Grave,
-		Graveyard,
-		Boat,
-		Desert,
-		Cactus,
-		Seaweed,
-		Dragon,
-		Cyclist,
-		Fireman,
-		Beach,
-		Sun,
-		Palm,
-		Rainbow,
-		Tsunami,
-		Blood,
-		Sailboat,
-		Electricity,
-		LightBulb,
-		ChristmasTree,
-		Clock,
-		Frankenstein,
-		Wire,
-		Chainsaw,
-		Electrician,
-		Light,
-		ElectricEel,
-		Sunflower,
-		Oil,
-		Day,
-		Night,
-		SolarCell,
-		Eclipse,
-		Wave,
-		Tide,
-		Fireplace,
-		Sundial,
-		DoubleRainbow,
-		Scythe,
-		Gravestone,
-		Twilight,
-		Flute,
-		WaterPipe,
-		WildAnimal,
-		Snake,
-		Sickness,
-		Cold,
-		Snow,
-		Seasickness,
-		Snowman,
-		Toast,
-		Ice,
-		Sword,
-		Penguin,
-		Windmill,
-		AcidRain,
-		Airplane,
-		Algae,
-		Allergy,
-		Alligator,
-		Warrior,
-		Angel,
-		Antarctica,
-		Archipelago,
-		Armor,
-		Astronaut,
-		Atmosphere,
-		AtomicBomb,
-		Pig,
-		Bacteria,
-		Barn,
-		Bayonet,
-		Beaver,
-		Birdhouse,
-		Blizzard,
-		Brick,
-		Owl,
-		Butcher,
-		Car,
-		Charcoal,
-		Star,
-		Knight,
-		Cuckoo,
-		Dinosaur,
-		Dog,
-		Duck,
-		Dune,
-		Engineer,
-		Glasses,
-		Family,
-		FruitTree,
-		Orchard,
-		Fireworks,
-		Flood,
-		Fog,
-		Garden,
-		Grenade,
-		Hail,
-		Hay,
-		Hero,
-		Horizon,
-		Horse,
-		Hospital,
-		IceCream,
-		Mountain,
-		Glacier,
-		Alcohol,
-		Nerd,
-		Cart,
-		Wagon,
-		Doctor,
-		Paper,
-		Newspaper,
-		Salt,
-		Vampire,
-		Sunglasses,
-		Igloo,
-		Sandstorm,
-		Oasis,
-		Robot,
-		Sushi,
-		Treehouse,
-		Unicorn,
-		Bacon,
-		Cigarette,
-		Pilot,
-		Seahorse,
-		Fossil,
-		Ring,
-		Pegasus,
-		Shark,
-		Space,
-		Yogurt,
-		Computer,
-		Mouse,
-		Baker,
-		Pencil,
-		Starfish,
-		Wine,
-		Telescope,
-		Pizza,
-		Cat,
-		Sound,
-		Lightsaber,
-		Jedi,
-		Wolf,
-		Werewolf,
-		GrimReaper,
-		Sailor,
-		Camel,
-		Wall,
-		Planet,
-		Rocket,
-		Swordfish,
-		Drunk,
-		Music,
-		Smog,
-		Beer,
-		Seagull,
-		Juice,
-		Village,
-		Scissors,
-		Story,
-		Letter,
-		Coconut,
-		CoconutMilk,
-		Sugar,
-		Bat,
-		Squirrel,
-		River,
-		Cookie,
-		Iceberg,
-		Vulture,
-		Bone,
-		Castle,
-		Centaur,
-		Nest,
-		Lion,
-		Doghouse,
-		Skyscraper,
-		Dynamite,
-		Goat,
-		Cereal,
-		BlackHole,
-		Caramel,
-		AstronautIceCream,
-		Lighthouse,
-		Surfer,
-		Monkey,
-		Idea,
-		Galaxy,
-		Lamp,
-		Mirror,
-		Meteoroid,
-		Meteor,
-		Platypus,
-		Pirate,
-		LavaLamp,
-		Hamburger,
-		Email,
-		Prism,
-		Sandpaper,
-		Kite,
-		Origami,
-		DarthVader,
-		Statue,
-		City,
-		Eagle,
-		Watch,
-		Ambulance,
-		Manatee,
-		SkiGoggles,
-		SwimGoggles,
-		Cyborg,
-		Mermaid,
-		Sheep,
-		Alien,
-		Book,
-		Batman,
-		Dam,
-		Internet,
-		Motorcycle,
-		Avalanche,
-		Leather,
-		Wizard,
-		Faun,
-		Gold,
-		Moss,
-		EggTimer,
-		Butter,
-		Oxygen,
-		Pyramid,
-		SandCastle,
-		Yoda,
-		Umbrella,
-		Pond,
-		Wool,
-		Scarecrow,
-		CarbonDioxide,
-		Monarch,
-		Bridge,
-		Broom,
-		Leaf,
-		Fridge,
-		Printer,
-		Scorpion,
-		Santa,
-		Reindeer,
-		Sledge,
-		CandyCane,
-		ChristmasStocking,
-		Chimney,
-		Sweater,
-		Gift,
-		Snowball,
-		Snowboard,
-		Armadillo,
-		Pigeon,
-		Seaplane,
-		Narwhal,
-		Piranha,
-		Titanic,
-		Obsidian,
-		Mummy,
-		Money,
-		FlyingFish,
-		Tank,
-		SolarSystem,
-		PaperAirplane,
-		Banana,
-		Sandstone,
-		Parrot,
-		DryIce,
-		Flashlight,
-		Dew,
-		TrojanHorse,
-		Catnip,
-		Scalpel,
-		Skateboard,
-		AlarmClock,
-		WaterGun,
-		WindTurbine,
-		PiggyBank,
-		Sloth,
-		Marshmallows,
-		Seal,
-		Helicopter,
-		Tea,
-		Picnic,
-		Peacock,
-		Rose,
-		Flower,
-		Hummingbird,
-		Chameleon,
-		Fox,
-		WildBoar,
-		Firetruck,
-		Medusa,
-		FlyingSquirrel,
-		Fence,
-		ElectricCar,
-		Ostrich,
-		MilkShake,
-		Map,
-		LawnMower,
-		Mousetrap,
-		Cotton,
-		Thread,
-		Fabric,
-		Bank,
-		Excalibur,
-		Popsicle,
-		Woodpecker,
-		Wand,
-		PirateShip,
-		Constellation,
-		ComputerMouse,
-		Pasta,
-		Shuriken,
-		Ninja,
-		Saddle,
-		SheetMusic,
-		Donut,
-		FishingRod,
-		Lemonade,
-		Mayonnaise,
-		Confetti,
-		Witch,
-		Skeleton,
-		Spider,
-		Web,
-		Ghost,
-		Vegetable,
-		Pumpkin,
-		CrystalBall,
-		JackOLantern,
-		Bee,
-		Butterfly,
-		Beehive,
-		Honey,
-		Wax,
-		Candle,
-		WaterLily,
-		Hippo,
-		Petroleum,
-		Pinocchio,
-		WrappingPaper,
-		Minotaur,
-		Vase,
-		SpaceStation,
-		Soap,
-		Fountain,
-		Needle,
-		Drum,
-		Batter,
-		Snowmobile,
-		Rat,
-		Sphinx,
-		Jam,
-		Cheeseburger,
-		Crow,
-		Taser,
-		Cannon,
-		Blender,
-		BulletproofVest,
-		Pitchfork,
-		Ufo,
-		Cake,
-		Bbq,
-		Swimmer,
-		Angler,
-		Farm,
-		Ruins,
-		Steak,
-		Spaceship,
-		Godzilla,
-		Horseshoe,
-		Soda,
-		Tractor,
-		Frog,
-		Mailman,
-		Bandage,
-		LogCabin,
-		Bus,
-		Alpaca,
-		Rope,
-		Puddle,
-		GrilledCheese,
-		Pterodactyl,
-		SnowGlobe,
-		Flamethrower,
-		Waterfall,
-		Ozone,
-		Ant,
-		Paint,
-		TreasureMap,
-		Treasure,
-		Hammer,
-		MountainRange,
-		FamilyTree,
-		Rv,
-		Mold,
-		Bakery,
-		IceCreamTruck,
-		Gardener,
-		SuperNova,
-		Doge,
-		TheOneRing,
-		KeyboardCat,
-		NinjaTurtle,
-		GingerbreadMan,
-		GingerbreadHouse,
-		SafetyGlasses,
-		HayBale,
-		Harp,
-		FortuneCookie,
-		ChickenWing,
-		Recipe,
-		FrenchFries,
-		Ruler,
-		ChickenSoup,
-		IcedTea,
-		TyrannosaurusRex,
-		Lake,
-		Duckling,
-		Toucan,
-		OpticalFiber,
-		Stethoscope,
-		MacAndCheese,
-		Nessie,
-		BananaBread,
-		Drone,
-		Jerky,
-		FairyTale,
-		Ivy,
-		Hamster,
-		MountainGoat,
-		Carrot,
-		Penicillin,
-		VacuumCleaner,
-		Yeti,
-		Aurora,
-		BonsaiTree,
-		FireExtinguisher,
-		Gnome,
-		Granite,
-		Hedge,
-		Microscope,
-		Mars,
-		Roomba,
-		Smoothie,
-		Tardis,
-		TheDoctor,
-		SteelWool,
-		Crayon,
-		Tunnel,
-		Quicksand,
-		Parachute,
-		Husky,
-		RollerCoaster,
-		PencilSharpener,
-		SewingMachine,
-		DonQuixote,
+		Water, // 1
+		Fire, // 2
+		Earth, // 3
+		Air, // 4
+		Steam, // 5
+		Lava, // 6
+		Pressure, // 7
+		Volcano, // 8
+		Sea, // 9
+		Ocean, // 10
+		Energy, // 11
+		Mud, // 12
+		Rain, // 13
+		Dust, // 14
+		Cloud, // 15
+		Storm, // 16
+		Geyser, // 17
+		Isle, // 18
+		Earthquake, // 19
+		Wind, // 20
+		Eruption, // 21
+		Sky, // 22
+		Hurricane, // 23
+		Plant, // 24
+		Gunpowder, // 25
+		Explosion, // 26
+		Stone, // 27
+		Sand, // 28
+		Ash, // 29
+		Coal, // 30
+		Diamond, // 31
+		Glass, // 32
+		Hourglass, // 33
+		Aquarium, // 34
+		Greenhouse, // 35
+		Metal, // 36
+		Rust, // 37
+		Boiler, // 38
+		Bullet, // 39
+		Steel, // 40
+		Time, // 41
+		Tree, // 42
+		Swamp, // 43
+		Life, // 44
+		Plankton, // 45
+		Bird, // 46
+		Phoenix, // 47
+		Human, // 48
+		Egg, // 49
+		Clay, // 50
+		Golem, // 51
+		Pottery, // 52
+		Tool, // 53
+		SteamEngine, // 54
+		Blade, // 55
+		Wood, // 56
+		Axe, // 57
+		Forest, // 58
+		Love, // 59
+		Lumberjack, // 60
+		Train, // 61
+		Steamboat, // 62
+		Campfire, // 63
+		HardRoe, // 64
+		Omelette, // 65
+		Caviar, // 66
+		Turtle, // 67
+		Fish, // 68
+		Lizard, // 69
+		Field, // 70
+		Farmer, // 71
+		House, // 72
+		Livestock, // 73
+		Chicken, // 74
+		Grass, // 75
+		Cow, // 76
+		Milk, // 77
+		Cheese, // 78
+		Moon, // 79
+		Tobacco, // 80
+		Pipe, // 81
+		Wheel, // 82
+		Bicycle, // 83
+		Wheat, // 84
+		Flour, // 85
+		Dough, // 86
+		Bread, // 87
+		Fruit, // 88
+		Pie, // 89
+		Meat, // 90
+		Sandwich, // 91
+		Smoke, // 92
+		Ham, // 93
+		Gun, // 94
+		Corpse, // 95
+		Zombie, // 96
+		Coffin, // 97
+		Grave, // 98
+		Graveyard, // 99
+		Boat, // 100
+		Desert, // 101
+		Cactus, // 102
+		Seaweed, // 103
+		Dragon, // 104
+		Cyclist, // 105
+		Fireman, // 106
+		Beach, // 107
+		Sun, // 108
+		Palm, // 109
+		Rainbow, // 110
+		Tsunami, // 111
+		Blood, // 112
+		Sailboat, // 113
+		Electricity, // 114
+		LightBulb, // 115
+		ChristmasTree, // 116
+		Clock, // 117
+		Frankenstein, // 118
+		Wire, // 119
+		Chainsaw, // 120
+		Electrician, // 121
+		Light, // 122
+		ElectricEel, // 123
+		Sunflower, // 124
+		Oil, // 125
+		Day, // 126
+		Night, // 127
+		SolarCell, // 128
+		Eclipse, // 129
+		Wave, // 130
+		Tide, // 131
+		Fireplace, // 132
+		Sundial, // 133
+		DoubleRainbow, // 134
+		Scythe, // 135
+		Gravestone, // 136
+		Twilight, // 137
+		Flute, // 138
+		WaterPipe, // 139
+		WildAnimal, // 140
+		Snake, // 141
+		Sickness, // 142
+		Cold, // 143
+		Snow, // 144
+		Seasickness, // 145
+		Snowman, // 146
+		Toast, // 147
+		Ice, // 148
+		Sword, // 149
+		Penguin, // 150
+		Windmill, // 151
+		AcidRain, // 152
+		Airplane, // 153
+		Algae, // 154
+		Allergy, // 155
+		Alligator, // 156
+		Warrior, // 157
+		Angel, // 158
+		Antarctica, // 159
+		Archipelago, // 160
+		Armor, // 161
+		Astronaut, // 162
+		Atmosphere, // 163
+		AtomicBomb, // 164
+		Pig, // 165
+		Bacteria, // 166
+		Barn, // 167
+		Bayonet, // 168
+		Beaver, // 169
+		Birdhouse, // 170
+		Blizzard, // 171
+		Brick, // 172
+		Owl, // 173
+		Butcher, // 174
+		Car, // 175
+		Charcoal, // 176
+		Star, // 177
+		Knight, // 178
+		Cuckoo, // 179
+		Dinosaur, // 180
+		Dog, // 181
+		Duck, // 182
+		Dune, // 183
+		Engineer, // 184
+		Glasses, // 185
+		Family, // 186
+		FruitTree, // 187
+		Orchard, // 188
+		Fireworks, // 189
+		Flood, // 190
+		Fog, // 191
+		Garden, // 192
+		Grenade, // 193
+		Hail, // 194
+		Hay, // 195
+		Hero, // 196
+		Horizon, // 197
+		Horse, // 198
+		Hospital, // 199
+		IceCream, // 200
+		Mountain, // 201
+		Glacier, // 202
+		Alcohol, // 203
+		Nerd, // 204
+		Cart, // 205
+		Wagon, // 206
+		Doctor, // 207
+		Paper, // 208
+		Newspaper, // 209
+		Salt, // 210
+		Vampire, // 211
+		Sunglasses, // 212
+		Igloo, // 213
+		Sandstorm, // 214
+		Oasis, // 215
+		Robot, // 216
+		Sushi, // 217
+		Treehouse, // 218
+		Unicorn, // 219
+		Bacon, // 220
+		Cigarette, // 221
+		Pilot, // 222
+		Seahorse, // 223
+		Fossil, // 224
+		Ring, // 225
+		Pegasus, // 226
+		Shark, // 227
+		Space, // 228
+		Yogurt, // 229
+		Computer, // 230
+		Mouse, // 231
+		Baker, // 232
+		Pencil, // 233
+		Starfish, // 234
+		Wine, // 235
+		Telescope, // 236
+		Pizza, // 237
+		Cat, // 238
+		Sound, // 239
+		Lightsaber, // 240
+		Jedi, // 241
+		Wolf, // 242
+		Werewolf, // 243
+		GrimReaper, // 244
+		Sailor, // 245
+		Camel, // 246
+		Wall, // 247
+		Planet, // 248
+		Rocket, // 249
+		Swordfish, // 250
+		Drunk, // 251
+		Music, // 252
+		Smog, // 253
+		Beer, // 254
+		Seagull, // 255
+		Juice, // 256
+		Village, // 257
+		Scissors, // 258
+		Story, // 259
+		Letter, // 260
+		Coconut, // 261
+		CoconutMilk, // 262
+		Sugar, // 263
+		Bat, // 264
+		Squirrel, // 265
+		River, // 266
+		Cookie, // 267
+		Iceberg, // 268
+		Vulture, // 269
+		Bone, // 270
+		Skittles, // 271
+		CottonCandy, // 272
+		FrozenYogurt, // 273
+		SwedishFish, // 274
+		RingPop, // 275
+		Nerds, // 276
+		RainbowPopsicle, // 277 *
+		Peeps, // 278
+		PopRocks, // 279
+		Sweethearts, // 280
+		Pokki, // 281
+		Castle, // 282
+		Centaur, // 283
+		Nest, // 284
+		Lion, // 285
+		Doghouse, // 286
+		Skyscraper, // 287
+		Dynamite, // 288
+		Goat, // 289
+		Cereal, // 290
+		BlackHole, // 291
+		ELEMENT_292, // 292
+		Starburst, // 293
+		JuicyFruit, // 294
+		Caramel, // 295
+		Goldfish, // 296
+		AstronautIceCream, // 297
+		MilkyWay, // 298
+		GuinessFloat, // 299
+		CaramelApple, // 300
+		Lighthouse, // 301
+		Surfer, // 302
+		Monkey, // 303
+		Idea, // 304
+		Galaxy, // 305
+		Lamp, // 306
+		Mirror, // 307
+		Meteoroid, // 308
+		Meteor, // 309
+		Platypus, // 310
+		Pirate, // 311
+		LavaLamp, // 312
+		Hamburger, // 313
+		Email, // 314
+		Prism, // 315
+		Sandpaper, // 316
+		Kite, // 317
+		Origami, // 318
+		DarthVader, // 319
+		Statue, // 320
+		WillyWonka, // 321
+		Chocolate, // 322
+		Mounds, // 323
+		Caramelo, // 324
+		Twix, // 325
+		CadburyEggs, // 326
+		ChocolateMilk, // 327
+		CookieDough, // 328
+		RedVines, // 329
+		FunDip, // 330
+		City, // 331
+		Eagle, // 332
+		Watch, // 333
+		Ambulance, // 334
+		Manatee, // 335
+		SkiGoggles, // 336
+		SwimGoggles, // 337
+		Cyborg, // 338
+		Mermaid, // 339
+		Sheep, // 340
+		Alien, // 341
+		Book, // 342
+		Batman, // 343
+		Dam, // 344
+		Internet, // 345
+		Motorcycle, // 346
+		Avalanche, // 347
+		Leather, // 348
+		Wizard, // 349
+		Faun, // 350
+		Gold, // 351
+		Moss, // 352
+		EggTimer, // 353
+		Butter, // 354
+		Oxygen, // 355
+		Pyramid, // 356
+		SandCastle, // 357
+		Yoda, // 358
+		Umbrella, // 359
+		Pond, // 360
+		Wool, // 361
+		Scarecrow, // 362
+		CarbonDioxide, // 363
+		Monarch, // 364
+		Bridge, // 365
+		Broom, // 366
+		Leaf, // 367
+		Fridge, // 368
+		Printer, // 369
+		Scorpion, // 370
+		Santa, // 371
+		Reindeer, // 372
+		Sledge, // 373
+		CandyCane, // 374
+		ChristmasStocking, // 375
+		Chimney, // 376
+		Sweater, // 377
+		Gift, // 378
+		Snowball, // 379
+		Snowboard, // 380
+		Armadillo, // 381
+		Pigeon, // 382
+		Seaplane, // 383
+		Narwhal, // 384
+		Piranha, // 385
+		Titanic, // 386
+		Obsidian, // 387
+		Mummy, // 388
+		Money, // 389
+		FlyingFish, // 390
+		Tank, // 391
+		SolarSystem, // 392
+		PaperAirplane, // 393
+		Banana, // 394
+		Sandstone, // 395
+		Parrot, // 396
+		DryIce, // 397
+		Flashlight, // 398
+		Dew, // 399
+		TrojanHorse, // 400
+		Catnip, // 401
+		Scalpel, // 402
+		Skateboard, // 403
+		AlarmClock, // 404
+		WaterGun, // 405
+		WindTurbine, // 406
+		PiggyBank, // 407
+		Sloth, // 408
+		Marshmallows, // 409
+		Seal, // 410
+		Helicopter, // 411
+		Tea, // 412
+		Picnic, // 413
+		Peacock, // 414
+		Rose, // 415
+		Flower, // 416
+		Hummingbird, // 417
+		Chameleon, // 418
+		Fox, // 419
+		WildBoar, // 420
+		Firetruck, // 421
+		Medusa, // 422
+		FlyingSquirrel, // 423
+		Fence, // 424
+		ElectricCar, // 425
+		Ostrich, // 426
+		MilkShake, // 427
+		Map, // 428
+		LawnMower, // 429
+		Mousetrap, // 430
+		Cotton, // 431
+		Thread, // 432
+		Fabric, // 433
+		Bank, // 434
+		Excalibur, // 435
+		Popsicle, // 436
+		Woodpecker, // 437
+		Wand, // 438
+		PirateShip, // 439
+		Constellation, // 440
+		ComputerMouse, // 441
+		Pasta, // 442
+		Shuriken, // 443
+		Ninja, // 444
+		Saddle, // 445
+		SheetMusic, // 446
+		Donut, // 447
+		FishingRod, // 448
+		Lemonade, // 449
+		Mayonnaise, // 450
+		Confetti, // 451
+		Witch, // 452
+		Skeleton, // 453
+		Spider, // 454
+		Web, // 455
+		Ghost, // 456
+		Vegetable, // 457
+		Pumpkin, // 458
+		CrystalBall, // 459
+		JackOLantern, // 460
+		Bee, // 461
+		Butterfly, // 462
+		Beehive, // 463
+		Honey, // 464
+		Wax, // 465
+		Candle, // 466
+		WaterLily, // 467
+		Hippo, // 468
+		Petroleum, // 469
+		Pinocchio, // 470
+		WrappingPaper, // 471
+		Minotaur, // 472
+		Vase, // 473
+		SpaceStation, // 474
+		Soap, // 475
+		Fountain, // 476
+		Needle, // 477
+		Drum, // 478
+		Batter, // 479
+		Snowmobile, // 480
+		Rat, // 481
+		Sphinx, // 482
+		Jam, // 483
+		Cheeseburger, // 484
+		Crow, // 485
+		Taser, // 486
+		Cannon, // 487
+		Blender, // 488
+		BulletproofVest, // 489
+		Pitchfork, // 490
+		Ufo, // 491
+		Cake, // 492
+		Bbq, // 493
+		Swimmer, // 494
+		Angler, // 495
+		Farm, // 496
+		Ruins, // 497
+		Steak, // 498
+		Spaceship, // 499
+		Godzilla, // 500
+		Horseshoe, // 501
+		Soda, // 502
+		Tractor, // 503
+		Frog, // 504
+		Mailman, // 505
+		Bandage, // 506
+		LogCabin, // 507
+		Bus, // 508
+		Alpaca, // 509
+		Rope, // 510
+		Puddle, // 511
+		GrilledCheese, // 512
+		Pterodactyl, // 513
+		SnowGlobe, // 514
+		Flamethrower, // 515
+		Waterfall, // 516
+		Ozone, // 517
+		Ant, // 518
+		Paint, // 519
+		TreasureMap, // 520
+		Treasure, // 521
+		Hammer, // 522
+		MountainRange, // 523
+		FamilyTree, // 524
+		Rv, // 525
+		Mold, // 526
+		Bakery, // 527
+		IceCreamTruck, // 528
+		Gardener, // 529
+		SuperNova, // 530
+		Doge, // 531
+		TheOneRing, // 532
+		KeyboardCat, // 533
+		NinjaTurtle, // 534
+		GingerbreadMan, // 535
+		GingerbreadHouse, // 536
+		SafetyGlasses, // 537
+		HayBale, // 538
+		Harp, // 539
+		FortuneCookie, // 540
+		ChickenWing, // 541
+		Recipe, // 542
+		FrenchFries, // 543
+		Ruler, // 544
+		ChickenSoup, // 545
+		IcedTea, // 546
+		TyrannosaurusRex, // 547
+		Lake, // 548
+		Duckling, // 549
+		Toucan, // 550
+		OpticalFiber, // 551
+		Stethoscope, // 552
+		MacAndCheese, // 553
+		Nessie, // 554
+		BananaBread, // 555
+		Drone, // 556
+		Jerky, // 557
+		FairyTale, // 558
+		Ivy, // 559
+		Hamster, // 560
+		MountainGoat, // 561
+		Carrot, // 562
+		Penicillin, // 563
+		VacuumCleaner, // 564
+		Yeti, // 565
+		Aurora, // 566
+		BonsaiTree, // 567
+		FireExtinguisher, // 568
+		Gnome, // 569
+		Granite, // 570
+		Hedge, // 571
+		Microscope, // 572
+		Mars, // 573
+		Roomba, // 574
+		Smoothie, // 575
+		Tardis, // 576
+		TheDoctor, // 577
+		SteelWool, // 578
+		Crayon, // 579
+		Tunnel, // 580
+		Quicksand, // 581
+		Parachute, // 582
+		Husky, // 583
+		RollerCoaster, // 584
+		PencilSharpener, // 585
+		SewingMachine, // 586
+		DonQuixote, // 587
 
 		Count,
 	};
 }
 
 extern const char* elementNames[];
-extern const u32 elementColors[];
 
 #endif // DATA__ELEMENT__HPP
