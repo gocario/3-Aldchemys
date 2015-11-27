@@ -52,6 +52,8 @@ void el_freeNodes();
 
 extern elementList_s elementList;
 extern elementNode_s* selectedNode;
+
+extern sf2d_texture* workBackground;
 extern sf2d_texture* elemTiles;
 
 #endif // ALCHEMY_SCENE_HPP

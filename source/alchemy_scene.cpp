@@ -140,10 +140,8 @@ void el_init()
 {
 	el_freeNodes();
 
-	if (!elemTiles)
-	{
-		elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
-	}
+	if (!elemTiles) elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
+	if (!workBackground) workBackground = sf2d_create_texture_mem_RGBA8(ImageManager::workBackground_img.pixel_data, ImageManager::workBackground_img.width, ImageManager::workBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
 }
 
 
@@ -238,6 +236,8 @@ void el_drawNode(elementNode_s* node)
 void el_drawNodes()
 // ------------------------------------
 {
+	sf2d_draw_texture(workBackground, 0, 0);
+	
 	elementNode_s* node;
 
 	node = elementList.last;
@@ -282,4 +282,5 @@ void el_freeNodes()
 	elementList.count = 0;
 
 	if (elemTiles) sf2d_free_texture(elemTiles);
+	if (workBackground) sf2d_free_texture(workBackground);
 }
