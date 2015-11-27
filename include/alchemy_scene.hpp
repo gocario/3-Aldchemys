@@ -1,8 +1,12 @@
 #ifndef ALCHEMY_SCENE_HPP
 #define ALCHEMY_SCENE_HPP
 
+#include <sf2d.h>
+
 #include "alchemy.hpp"
 
+#define ROW_TILE_COUNT 25
+#define TILE_SIZE 32
 #define ELEMENT_SIZE 32
 
 struct elementNode_s
@@ -48,5 +52,6 @@ void el_freeNodes();
 
 extern elementList_s elementList;
 extern elementNode_s* selectedNode;
+extern sf2d_texture* elemTiles;
 
 #endif // ALCHEMY_SCENE_HPP

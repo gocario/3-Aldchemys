@@ -8,6 +8,7 @@ int main(int argc, char **argv)
 {
 	// Start sf2dlib
 	sf2d_init();
+	sf2d_set_clear_color(RGBA8(0xF5, 0xF2, 0xEF, 0xFF));
 
 	// Initialize console on top screen
 	consoleInit(GFX_TOP, NULL);
@@ -19,6 +20,12 @@ int main(int argc, char **argv)
 	el_init();
 	el_createNode(Element::DoubleRainbow);
 	el_createNode(Element::Horse);
+	el_createNode(Element::Fire);
+	el_createNode(Element::Water);
+	el_createNode(Element::Lava);
+	el_createNode(Element::Water);
+	el_createNode(Element::Fire);
+	el_createNode(Element::Earth);
 
 	consoleClear();
 

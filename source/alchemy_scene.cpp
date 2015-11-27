@@ -1,10 +1,11 @@
 #include "alchemy_scene.hpp"
+#include "data/images.hpp"
 
-#include <sf2d.h>
 #include <stdio.h>
 
 elementList_s elementList;
 elementNode_s* selectedNode = NULL;
+sf2d_texture* elemTiles = NULL;
 
 
 // ------------------------------------
@@ -138,6 +139,11 @@ void el_init()
 // ------------------------------------
 {
 	el_freeNodes();
+
+	if (!elemTiles)
+	{
+		elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
+	}
 }
 
 
@@ -223,7 +229,8 @@ void el_pushNodeFirst(elementNode_s* node)
 void el_drawNode(elementNode_s* node)
 // ------------------------------------
 {
-	sf2d_draw_rectangle(node->x, node->y, 32, 32, RGBA8(0xFF, 0xFF, 0xFF, 0xFF)/*elementColors[node->elem]*/);
+	//sf2d_draw_rectangle(node->x, node->y, 32, 32, RGBA8(0xFF, 0xFF, 0xFF, 0xFF)/*elementColors[node->elem]*/);
+	sf2d_draw_texture_part(elemTiles, node->x, node->y, (node->elem % ROW_TILE_COUNT) * TILE_SIZE, (node->elem / ROW_TILE_COUNT) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 }
 
 
@@ -273,4 +280,6 @@ void el_freeNodes()
 	elementList.first = NULL;
 	elementList.last = NULL;
 	elementList.count = 0;
+
+	if (elemTiles) sf2d_free_texture(elemTiles);
 }
