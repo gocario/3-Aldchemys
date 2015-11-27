@@ -3,6 +3,8 @@
 
 #include <sf2d.h>
 
+#include "keystate.h"
+
 #include "alchemy.hpp"
 
 #define ROW_TILE_COUNT 25
@@ -46,9 +48,14 @@ void el_pushNodeFirst(elementNode_s* node);
 
 void el_drawNode(elementNode_s* node);
 void el_drawNodes();
-
 void el_freeNode(elementNode_s* node);
 void el_freeNodes();
+
+void el_initialize();
+void el_destroy();
+void el_drawTopScreen();
+void el_drawBottomScreen();
+void el_updateInput(keystate_s ks);
 
 extern elementList_s elementList;
 extern elementNode_s* selectedNode;

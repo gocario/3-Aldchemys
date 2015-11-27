@@ -17,15 +17,7 @@ int main(int argc, char **argv)
 	printf(" > elementNode: %i\n", sizeof(elementNode_s));
 	printf(" > elementList: %i\n", sizeof(elementList_s));
 
-	el_init();
-	el_createNode(Element::DoubleRainbow);
-	el_createNode(Element::Horse);
-	el_createNode(Element::Fire);
-	el_createNode(Element::Water);
-	el_createNode(Element::Lava);
-	el_createNode(Element::Water);
-	el_createNode(Element::Fire);
-	el_createNode(Element::Earth);
+	el_initialize();
 
 	consoleClear();
 
@@ -37,6 +29,7 @@ int main(int argc, char **argv)
 
 		// Draw the top screen
 		// sf2d_start_frame(GFX_TOP, GFX_LEFT);
+		// el_drawTopScreen();
 		// sf2d_end_frame();
 		
 		// printf("\x1B[0;0HElement List: %p\n", &elementList);
@@ -54,46 +47,19 @@ int main(int argc, char **argv)
 
 		// Draw the bottom screen
 		sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
-			el_drawNodes();
+			el_drawBottomScreen();
 		sf2d_end_frame();
 
 		// Swap the buffers
 		sf2d_swapbuffers();
 
+		el_updateInput(ks);
 
 		// Exit the loop
 		if (ks.down & KEY_START) break;
-
-		if (ks.down & KEY_X)
-		{
-			el_createNode(Element::Fire);
-		}
-
-		{
-			if (ks.down & KEY_TOUCH)
-			{
-				el_selectNode(ks.touch.px, ks.touch.py);
-			}
-			
-			if (ks.held & KEY_TOUCH)
-			{
-				if (el_isNodeSelected())
-				{
-					el_moveSelectedNode(ks.touch.px, ks.touch.py);
-				}
-			}
-
-			if (ks.up & KEY_TOUCH)
-			{
-				if (el_isNodeSelected())
-				{
-					el_deselectNode();
-				}
-			}
-		}
 	}
 	
-	el_freeNodes();
+	el_destroy();
 
 	// Stop sf2dlib
 	sf2d_fini();

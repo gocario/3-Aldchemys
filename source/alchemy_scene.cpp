@@ -5,6 +5,7 @@
 
 elementList_s elementList;
 elementNode_s* selectedNode = NULL;
+sf2d_texture* workBackground = NULL;
 sf2d_texture* elemTiles = NULL;
 
 
@@ -139,9 +140,6 @@ void el_init()
 // ------------------------------------
 {
 	el_freeNodes();
-
-	if (!elemTiles) elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
-	if (!workBackground) workBackground = sf2d_create_texture_mem_RGBA8(ImageManager::workBackground_img.pixel_data, ImageManager::workBackground_img.width, ImageManager::workBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
 }
 
 
@@ -249,7 +247,6 @@ void el_drawNodes()
 }
 
 
-
 // ------------------------------------
 void el_freeNode(elementNode_s* node)
 // ------------------------------------
@@ -280,7 +277,88 @@ void el_freeNodes()
 	elementList.first = NULL;
 	elementList.last = NULL;
 	elementList.count = 0;
+}
+
+
+// ------------------------------------
+void el_initialize()
+// ------------------------------------
+{
+	el_init();
+
+	if (!elemTiles) elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
+	if (!workBackground) workBackground = sf2d_create_texture_mem_RGBA8(ImageManager::workBackground_img.pixel_data, ImageManager::workBackground_img.width, ImageManager::workBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
+	
+	el_createNode(Element::DoubleRainbow);
+	el_createNode(Element::Horse);
+	el_createNode(Element::Fire);
+	el_createNode(Element::Water);
+	el_createNode(Element::Lava);
+	el_createNode(Element::Water);
+	el_createNode(Element::Fire);
+	el_createNode(Element::Earth);
+	el_createNode(Element::Earth);
+	el_createNode(Element::Earth);
+	el_createNode(Element::Earth);
+}
+
+
+// ------------------------------------
+void el_destroy()
+// ------------------------------------
+{
+	el_freeNodes();
 
 	if (elemTiles) sf2d_free_texture(elemTiles);
 	if (workBackground) sf2d_free_texture(workBackground);
+}
+
+
+// ------------------------------------
+void el_drawTopScreen()
+// ------------------------------------
+{
+
+}
+
+
+// ------------------------------------
+void el_drawBottomScreen()
+// ------------------------------------
+{
+	el_drawNodes();
+}
+
+
+// ------------------------------------
+void el_updateInput(keystate_s ks)
+// ------------------------------------
+{
+	if (ks.down & KEY_X)
+	{
+		el_createNode(Element::Fire);
+	}
+
+	{
+		if (ks.down & KEY_TOUCH)
+		{
+			el_selectNode(ks.touch.px, ks.touch.py);
+		}
+		
+		if (ks.held & KEY_TOUCH)
+		{
+			if (el_isNodeSelected())
+			{
+				el_moveSelectedNode(ks.touch.px, ks.touch.py);
+			}
+		}
+
+		if (ks.up & KEY_TOUCH)
+		{
+			if (el_isNodeSelected())
+			{
+				el_deselectNode();
+			}
+		}
+	}
 }
