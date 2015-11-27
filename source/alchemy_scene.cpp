@@ -247,6 +247,9 @@ void el_drawNodes()
 void el_freeNode(elementNode_s* node)
 // ------------------------------------
 {
+#ifdef DEBUG_PRINT
+	printf("%s deleted\n", elementNames[node->elem]);
+#endif
 	el_removeNode(node);
 	delete node;
 }
