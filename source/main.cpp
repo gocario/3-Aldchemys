@@ -13,17 +13,16 @@ int main(int argc, char **argv)
 	consoleInit(GFX_TOP, NULL);
 
 	printf("Sizeof report:\n");
-	printf(" > elementPosition: %i\n", sizeof(elementPosition_s));
 	printf(" > elementNode: %i\n", sizeof(elementNode_s));
 	printf(" > elementList: %i\n", sizeof(elementList_s));
 
-	el_init(new elementNode_s({Element::Air,{24,24},NULL,NULL}));
-	el_addNode(new elementNode_s({Element::Air,{40,32},NULL,NULL}));
-	el_addNode(new elementNode_s({Element::Earth,{48,64},NULL,NULL}));
+	el_init();
+	el_createNode(Element::DoubleRainbow);
+	el_createNode(Element::Horse);
 
 	consoleClear();
 
-	elementNode_s* node = NULL;
+	// elementNode_s* node = NULL;
 	keystate_s ks;
 	while(aptMainLoop())
 	{
@@ -33,15 +32,15 @@ int main(int argc, char **argv)
 		// sf2d_start_frame(GFX_TOP, GFX_LEFT);
 		// sf2d_end_frame();
 		
-		printf("\x1B[0;0HElement List: %p\n", &elementList);
-			printf("     %-2u          <%9p %9p>\n", elementList.count, elementList.first, elementList.last);
-		printf("\n");
-		node = elementList.last;
-		for (u16 i = 0; i < elementList.count && node; i++)
-		{
-			printf("   > %9p: <%9p %9p>\n", node, node->next, node->prev);
-			node = node->prev;
-		}
+		// printf("\x1B[0;0HElement List: %p\n", &elementList);
+		// 	printf("     %-2u          <%9p %9p>\n", elementList.count, elementList.first, elementList.last);
+		// printf("\n");
+		// node = elementList.last;
+		// for (u16 i = 0; i < elementList.count && node; i++)
+		// {
+		// 	printf("   > %9p: <%9p %9p>\n", node, node->next, node->prev);
+		// 	node = node->prev;
+		// }
 
 		// printf("\x1B[0;0HSelected Node: %10p\n", selectedNode);
 
@@ -71,7 +70,7 @@ int main(int argc, char **argv)
 			
 			if (ks.held & KEY_TOUCH)
 			{
-				if (selectedNode)
+				if (el_isNodeSelected())
 				{
 					el_moveSelectedNode(ks.touch.px, ks.touch.py);
 				}
@@ -79,7 +78,10 @@ int main(int argc, char **argv)
 
 			if (ks.up & KEY_TOUCH)
 			{
-				el_deselectNode();
+				if (el_isNodeSelected())
+				{
+					el_deselectNode();
+				}
 			}
 		}
 	}

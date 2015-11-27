@@ -7,13 +7,16 @@
 
 typedef Element::element_e element_t;
 
-struct alchemyResult_s
+struct blendResult_s
 {
 	element_t first;
 	element_t second;
 	element_t result;
 };
 
-extern const alchemyResult_s alchemyResults[];
+extern const u16 blendCount;
+extern const blendResult_s blendResults[];
+
+element_t blendResult(element_t first, element_t second);
 
 #endif // ELEMENT_HPP

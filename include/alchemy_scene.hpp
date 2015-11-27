@@ -5,16 +5,11 @@
 
 #define ELEMENT_SIZE 32
 
-struct elementPosition_s
-{
-	s16 x;
-	s16 y;
-};
-
 struct elementNode_s
 {
 	element_t elem;
-	elementPosition_s pos;
+	s16 x;
+	s16 y;
 	// The previous layer (to draw before)
 	elementNode_s* prev;
 	// The next layer (to draw after)
@@ -30,12 +25,16 @@ struct elementList_s
 	elementNode_s* last;
 };
 
-void el_createNode(element_t elem);
+elementNode_s* el_createNode(element_t elem);
+bool el_isNodeSelected();
 void el_deselectNode();
 void el_selectNode(u16 x, u16 y);
 void el_moveSelectedNode(u16 x, u16 y);
-bool el_touchNode(elementNode_s* node, u16 x, u16 y);
+bool el_isNodeTouched(elementNode_s* node, u16 x, u16 y);
+void el_tryBlend();
 
+void el_init();
+void el_init(element_t elem);
 void el_init(elementNode_s* node);
 void el_removeNode(elementNode_s* node);
 void el_addNode(elementNode_s* node);
@@ -43,6 +42,8 @@ void el_pushNodeFirst(elementNode_s* node);
 
 void el_drawNode(elementNode_s* node);
 void el_drawNodes();
+
+void el_freeNode(elementNode_s* node);
 void el_freeNodes();
 
 extern elementList_s elementList;

@@ -45,7 +45,7 @@ ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard
 
 CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			-fomit-frame-pointer -ffast-math \
-			$(ARCH)
+			$(ARCH) -D DEBUG_PRINT
 
 CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS# -std=c99
 

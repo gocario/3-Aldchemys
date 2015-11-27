@@ -6,107 +6,210 @@
 elementList_s elementList;
 elementNode_s* selectedNode = NULL;
 
-void el_createNode(element_t elem)
+
+// ------------------------------------
+elementNode_s* el_createNode(element_t elem)
+// ------------------------------------
 {
 	elementNode_s* node = new elementNode_s;
 	node->elem = elem;
-	node->pos = {0,0};
+	node->x = 0;
+	node->y = 0;
+	node->next = NULL;
+	node->prev = NULL;
 	el_addNode(node);
+#ifdef DEBUG_PRINT
+	printf("%s created\n", elementNames[node->elem]);
+#endif
+	return node;
 }
 
 
+// ------------------------------------
+bool el_isNodeSelected()
+// ------------------------------------
+{
+	return selectedNode;
+}
+
+
+// ------------------------------------
 void el_deselectNode()
+// ------------------------------------
 {
-	selectedNode = NULL;
-}
-
-
-void el_selectNode(u16 x, u16 y)
-{
-	printf("Searching for: {%3u,%3u}", x, y);
 	elementNode_s* node;
 
-	node = elementList.first;
+	u16 x = selectedNode->x + ELEMENT_SIZE / 2;
+	u16 y = selectedNode->y + ELEMENT_SIZE / 2;
+
+#ifdef DEBUG_PRINT
+	printf("Searching for: {%3u,%3u}-\n", x, y);
+#endif
+	node = selectedNode->next;
 	while (node)
 	{
-		if (el_touchNode(node, x, y))
+		if (el_isNodeTouched(node, x, y))
 		{
-			printf(" found {%3i,%3i}\n", node->pos.x, node->pos.y);
-			selectedNode = node;
-			el_pushNodeFirst(node);
+#ifdef DEBUG_PRINT
+			printf("%s selected\n", elementNames[node->elem]);
+#endif
+			element_t elem = blendResult(selectedNode->elem, node->elem);
+			if (elem != Element::None)
+			{
+				x = node->x;
+				y = node->y;
+				el_freeNode(node);
+				el_freeNode(selectedNode);
+
+				node = el_createNode(elem);
+				node->x = x;
+				node->y = y;
+
+				node = NULL;
+				selectedNode = NULL;
+				// Place the break here to continue propagation
+			}
+			// Place the break here to stop propagation
 			break;
 		}
 		node = node->next;
 	}
-	if (!selectedNode)
+#ifdef DEBUG_PRINT
+	if (node)
+		printf("No node found\n");
+#endif
+
+	selectedNode = NULL;
+}
+
+
+// ------------------------------------
+void el_selectNode(u16 x, u16 y)
+// ------------------------------------
+{
+	elementNode_s* node;
+
+#ifdef DEBUG_PRINT
+	printf("Searching for: {%3u,%3u}+\n", x, y);
+#endif
+	node = elementList.first;
+	while (node)
 	{
-		printf("                \n");
+		if (el_isNodeTouched(node, x, y))
+		{
+			// printf(" found {%3i,%3i}\n", node->x, node->y);
+			selectedNode = node;
+			el_pushNodeFirst(node);
+#ifdef DEBUG_PRINT
+			printf("%s selected\n", elementNames[node->elem]);
+#endif
+			break;
+		}
+		node = node->next;
 	}
+#ifdef DEBUG_PRINT
+	if (!selectedNode)
+		printf("No node found\n");
+#endif
 }
 
 
+// ------------------------------------
 void el_moveSelectedNode(u16 x, u16 y)
+// ------------------------------------
 {
-	selectedNode->pos.x = x - (ELEMENT_SIZE / 2);
-	selectedNode->pos.y = y - (ELEMENT_SIZE / 2);
+	selectedNode->x = x - (ELEMENT_SIZE / 2);
+	selectedNode->y = y - (ELEMENT_SIZE / 2);
 }
 
 
-bool el_touchNode(elementNode_s* node, u16 x, u16 y)
+// ------------------------------------
+bool el_isNodeTouched(elementNode_s* node, u16 x, u16 y)
+// ------------------------------------
 {
-	return (x >= node->pos.x && x < node->pos.x + ELEMENT_SIZE &&
-			y >= node->pos.y && y < node->pos.y + ELEMENT_SIZE);
+	return (x >= node->x && x < node->x + ELEMENT_SIZE &&
+			y >= node->y && y < node->y + ELEMENT_SIZE);
 }
 
 
 
-void el_init(elementNode_s* node)
+// ------------------------------------
+void el_init()
+// ------------------------------------
 {
 	el_freeNodes();
-	node->next = NULL;
-	node->prev = NULL;
-	elementList.first = node;
-	elementList.last = node;
-	elementList.count = 1;
 }
 
 
-void el_removeNode(elementNode_s* node)
+// ------------------------------------
+void el_init(element_t elem)
+// ------------------------------------
 {
-	printf("Removing %9p", node);
-	
+	el_init();
+	el_createNode(elem);
+	// elementList.last = elementList.first;
+}
+
+// ------------------------------------
+void el_init(elementNode_s* node)
+// ------------------------------------
+{
+	el_init();
+	el_addNode(node);
+	// elementList.last = elementList.first;
+}
+
+
+// ------------------------------------
+void el_removeNode(elementNode_s* node)
+// ------------------------------------
+{
+#ifdef DEBUG_PRINT
+	// printf("Removing %9p", node);
+#endif
 	// If not the last
 	if (node->next)
 		node->next->prev = node->prev;
 	else
 		elementList.last = node->prev;
-
 	// If not the first
 	if (node->prev)
 		node->prev->next = node->next;
 	else
 		elementList.first = node->next;
-
 	node->next = NULL;
 	node->prev = NULL;
 	elementList.count--;
-	printf(" OK\n");
+#ifdef DEBUG_PRINT
+	// printf(" OK\n");
+#endif
 }
 
 
+// ------------------------------------
 void el_addNode(elementNode_s* node)
+// ------------------------------------
 {
-	printf("Adding %9p", node);
+#ifdef DEBUG_PRINT
+	// printf("Adding %9p", node);
+#endif
 	node->prev = NULL;
 	node->next = elementList.first;
-	elementList.first->prev = node;
+	if (elementList.first)
+		elementList.first->prev = node;
+	if (!elementList.last)
+		elementList.last = node;
 	elementList.first = node;
 	elementList.count++;
-	printf(" OK\n");
+#ifdef DEBUG_PRINT
+	// printf(" OK\n");
+#endif
 }
 
 
+// ------------------------------------
 void el_pushNodeFirst(elementNode_s* node)
+// ------------------------------------
 {
 	if (node != elementList.first)
 	{
@@ -116,14 +219,17 @@ void el_pushNodeFirst(elementNode_s* node)
 }
 
 
-
+// ------------------------------------
 void el_drawNode(elementNode_s* node)
+// ------------------------------------
 {
-	sf2d_draw_rectangle(node->pos.x, node->pos.y, 32, 32, elementColors[node->elem]);
+	sf2d_draw_rectangle(node->x, node->y, 32, 32, RGBA8(0xFF, 0xFF, 0xFF, 0xFF)/*elementColors[node->elem]*/);
 }
 
 
+// ------------------------------------
 void el_drawNodes()
+// ------------------------------------
 {
 	elementNode_s* node;
 
@@ -136,13 +242,19 @@ void el_drawNodes()
 }
 
 
+
+// ------------------------------------
 void el_freeNode(elementNode_s* node)
+// ------------------------------------
 {
 	el_removeNode(node);
 	delete node;
 }
 
+
+// ------------------------------------
 void el_freeNodes()
+// ------------------------------------
 {
 	elementNode_s* node;
 	elementNode_s* prevNode;
@@ -154,4 +266,8 @@ void el_freeNodes()
 		el_freeNode(node);
 		node = prevNode;
 	}
+
+	elementList.first = NULL;
+	elementList.last = NULL;
+	elementList.count = 0;
 }
