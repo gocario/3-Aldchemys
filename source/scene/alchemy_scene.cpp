@@ -280,10 +280,23 @@ void el_freeNodes()
 }
 
 
+
 // ------------------------------------
-void el_initialize()
+AlchemyScene::AlchemyScene() : Scene() { }
+// ------------------------------------
+
+
+// ------------------------------------
+AlchemyScene::~AlchemyScene() { }
+// ------------------------------------
+
+
+// ------------------------------------
+void AlchemyScene::initialize()
 // ------------------------------------
 {
+	printf("Scene initialized!\n");
+
 	el_init();
 
 	if (!elemTiles) elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
@@ -304,9 +317,11 @@ void el_initialize()
 
 
 // ------------------------------------
-void el_destroy()
+void AlchemyScene::destroy()
 // ------------------------------------
 {
+	printf("Scene destroyed!\n");
+
 	el_freeNodes();
 
 	if (elemTiles) sf2d_free_texture(elemTiles);
@@ -315,23 +330,22 @@ void el_destroy()
 
 
 // ------------------------------------
-void el_drawTopScreen()
+void AlchemyScene::drawTopScreen()
 // ------------------------------------
 {
-
+	// Empty
 }
 
 
 // ------------------------------------
-void el_drawBottomScreen()
+void AlchemyScene::drawBottomScreen()
 // ------------------------------------
 {
 	el_drawNodes();
 }
 
-
 // ------------------------------------
-void el_updateInput(keystate_s ks)
+void AlchemyScene::updateInput(const keystate_s& ks)
 // ------------------------------------
 {
 	if (ks.down & KEY_X)

@@ -3,7 +3,7 @@
 
 #include <sf2d.h>
 
-#include "keystate.h"
+#include "scene/scene.hpp"
 
 #include "alchemy.hpp"
 
@@ -51,16 +51,31 @@ void el_drawNodes();
 void el_freeNode(elementNode_s* node);
 void el_freeNodes();
 
-void el_initialize();
-void el_destroy();
-void el_drawTopScreen();
-void el_drawBottomScreen();
-void el_updateInput(keystate_s ks);
+// void el_initialize();
+// void el_destroy();
+// void el_drawTopScreen();
+// void el_drawBottomScreen();
+// void el_updateInput(const keystate_s& ks);
 
 extern elementList_s elementList;
 extern elementNode_s* selectedNode;
 
 extern sf2d_texture* workBackground;
 extern sf2d_texture* elemTiles;
+
+
+class AlchemyScene : public Scene
+{
+	public:
+		AlchemyScene();
+		~AlchemyScene();
+	
+		void initialize() override;
+		void destroy() override;
+		void drawTopScreen() override;
+		void drawBottomScreen() override;
+		void updateInput(const keystate_s& ks) override;
+};
+
 
 #endif // ALCHEMY_SCENE_HPP

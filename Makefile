@@ -29,9 +29,9 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/data
+SOURCES		:=	source source/data source/scene
 DATA		:=	data
-INCLUDES	:=	include include/data
+INCLUDES	:=	include include/data include/scene
 
 # NO_SMDH 		:= NO_SMDH
 APP_TITLE       := 3-Aldchemys
