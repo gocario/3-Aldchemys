@@ -4,14 +4,18 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fs.h"
+
 elementList_s elementList;
 elementNode_s* selectedNode = NULL;
 
+s16 libraryOffset = 0;
 u16 discoveredElementCount = 0;
 bool discoveredElements[Element::Count-1];
 element_t elementDiscoveries[Element::Count-2];
 
-sf2d_texture* workBackground = NULL;
+sf2d_texture* workspaceBackground = NULL;
+sf2d_texture* libraryBackground = NULL;
 sf2d_texture* elemTiles = NULL;
 
 
@@ -51,7 +55,7 @@ void el_deselectNode()
 	u16 y = selectedNode->y + ELEMENT_SIZE / 2;
 
 #ifdef DEBUG_PRINT
-	printf("Searching for: {%3u,%3u}-\n", x, y);
+	printf("Searching at: {%3u,%3u}- ", x, y);
 #endif
 	node = selectedNode->next;
 	while (node)
@@ -59,7 +63,7 @@ void el_deselectNode()
 		if (el_isNodeTouched(node, x, y))
 		{
 #ifdef DEBUG_PRINT
-			printf("%s selected\n", elementNames[node->elem]);
+			printf("%s found\n", elementNames[node->elem]);
 #endif
 			element_t elem = blendResult(selectedNode->elem, node->elem);
 			if (elem != Element::None)
@@ -68,14 +72,12 @@ void el_deselectNode()
 				y = node->y;
 				el_freeNode(node);
 				el_freeNode(selectedNode);
+				selectedNode = NULL;
 
 				el_discoverElement(elem);
 				node = el_createNode(elem);
 				node->x = x;
 				node->y = y;
-
-				node = NULL;
-				selectedNode = NULL;
 			}
 
 			break;
@@ -83,7 +85,7 @@ void el_deselectNode()
 		node = node->next;
 	}
 #ifdef DEBUG_PRINT
-	if (node)
+	if (!node)
 		printf("No node found\n");
 #endif
 
@@ -98,19 +100,19 @@ void el_selectNode(u16 x, u16 y)
 	elementNode_s* node;
 
 #ifdef DEBUG_PRINT
-	printf("Searching for: {%3u,%3u}+\n", x, y);
+	printf("Searching at: {%3u,%3u}+ ", x, y);
 #endif
 	node = elementList.first;
 	while (node)
 	{
 		if (el_isNodeTouched(node, x, y))
 		{
-			// printf(" found {%3i,%3i}\n", node->x, node->y);
+#ifdef DEBUG_PRINT
+			printf("%s found\n", elementNames[node->elem]);
+#endif
 			selectedNode = node;
 			el_pushNodeFirst(node);
-#ifdef DEBUG_PRINT
-			printf("%s selected\n", elementNames[node->elem]);
-#endif
+
 			break;
 		}
 		node = node->next;
@@ -119,6 +121,15 @@ void el_selectNode(u16 x, u16 y)
 	if (!selectedNode)
 		printf("No node found\n");
 #endif
+}
+
+
+// ------------------------------------
+void el_destroySelectedNode()
+// ------------------------------------
+{
+	el_freeNode(selectedNode);
+	selectedNode = NULL;
 }
 
 
@@ -135,8 +146,9 @@ void el_moveSelectedNode(u16 x, u16 y)
 bool el_isNodeTouched(elementNode_s* node, u16 x, u16 y)
 // ------------------------------------
 {
-	return (x >= node->x && x < node->x + ELEMENT_SIZE &&
-			y >= node->y && y < node->y + ELEMENT_SIZE);
+	return withinRectangle(x, y, node->x, node->y, ELEMENT_SIZE, ELEMENT_SIZE);
+	// return (x >= node->x && x < node->x + ELEMENT_SIZE &&
+	// 		y >= node->y && y < node->y + ELEMENT_SIZE);
 }
 
 
@@ -230,6 +242,15 @@ void el_pushNodeFirst(elementNode_s* node)
 
 
 // ------------------------------------
+element_t el_selectedLibraryElement(u16 x, u16 y)
+// ------------------------------------
+{
+	u32 ii = (y + libraryOffset) / ELEMENT_SIZE;
+	return elementDiscoveries[ii];
+}
+
+
+// ------------------------------------
 void el_discoverElement(element_t elem)
 // ------------------------------------
 {
@@ -293,6 +314,8 @@ void el_resetDiscoveredElements()
 		discoveredElements[i] = false;
 	}
 	discoveredElementCount = Element::Air;
+
+	el_updateDiscoveries();
 }
 
 
@@ -366,11 +389,50 @@ void el_updateDiscoveries()
 
 
 // ------------------------------------
+void el_drawSelectedNode()
+// ------------------------------------
+{
+	if (selectedNode)
+	{
+		sf2d_draw_texture_part_scale(elemTiles, 152, 72, (selectedNode->elem % ROW_TILE_COUNT) * TILE_SIZE, (selectedNode->elem / ROW_TILE_COUNT) * TILE_SIZE, TILE_SIZE, TILE_SIZE, 3.0f, 3.0f);
+	}
+}
+
+
+// ------------------------------------
+void el_drawElement(element_t elem, s16 x, s16 y)
+// ------------------------------------
+{
+	sf2d_draw_texture_part(elemTiles, x, y, (elem % ROW_TILE_COUNT) * TILE_SIZE, (elem / ROW_TILE_COUNT) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+}
+
+
+// ------------------------------------
+void el_drawLibrary()
+// ------------------------------------
+{
+	sf2d_draw_texture(libraryBackground, 256, 0);
+
+	u16 index;
+	for (u16 i = 0; i < 8; i++)
+	{
+		index = i + (libraryOffset) / ELEMENT_SIZE;
+		// printf("%i\n", index);
+		if (index >= 0 && index < discoveredElementCount)
+		{
+			el_drawElement(elementDiscoveries[index], 272, index * TILE_SIZE - libraryOffset);
+		}
+	}
+	// printf("\n");
+}
+
+
+// ------------------------------------
 void el_drawNode(elementNode_s* node)
 // ------------------------------------
 {
-	//sf2d_draw_rectangle(node->x, node->y, 32, 32, RGBA8(0xFF, 0xFF, 0xFF, 0xFF)/*elementColors[node->elem]*/);
-	sf2d_draw_texture_part(elemTiles, node->x, node->y, (node->elem % ROW_TILE_COUNT) * TILE_SIZE, (node->elem / ROW_TILE_COUNT) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+	el_drawElement(node->elem, node->x, node->y);
+	// sf2d_draw_texture_part(elemTiles, node->x, node->y, (node->elem % ROW_TILE_COUNT) * TILE_SIZE, (node->elem / ROW_TILE_COUNT) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 }
 
 
@@ -378,7 +440,7 @@ void el_drawNode(elementNode_s* node)
 void el_drawNodes()
 // ------------------------------------
 {
-	sf2d_draw_texture(workBackground, 0, 0);
+	sf2d_draw_texture(workspaceBackground, 0, 0);
 	
 	elementNode_s* node;
 
@@ -426,6 +488,90 @@ void el_freeNodes()
 
 
 // ------------------------------------
+void el_readSavefile()
+// ------------------------------------
+{
+	// u8* savedata = NULL;
+}
+
+
+// ------------------------------------
+void el_writeSavefile()
+// ------------------------------------
+{
+	
+}
+
+
+// ------------------------------------
+void el_readSavedata()
+// ------------------------------------
+{
+	u8* savedata = NULL;
+	u16 offset = 0;
+
+	el_init();
+
+	// Version
+	// u32 version = *(u32*)(savedata + 0);
+
+	// Discoveries
+	offset = 4;
+	u16 count = Element::Count-1;
+	for (u16 b = 0; b < count; b++)
+		discoveredElements[b] = ((savedata[offset + b/8] >> (b % 8)) & 0x1) == 1;
+
+	// Workspace
+	offset = 128;
+	element_t elem;
+	elementNode_s* node;
+	for (u16 i = 0; ; i += 16+16+16)
+	{
+		elem = (element_t) (*(u16*)(savedata + offset + i));
+		if (elem == Element::None) break;
+
+		node = el_createNode(elem);
+		node->x = *(s16*)(savedata + offset + i + 16);
+		node->y = *(s16*)(savedata + offset + i + 32);
+	}
+
+}
+
+
+// ------------------------------------
+void el_writeSavedata()
+// ------------------------------------
+{
+	u8* savedata = NULL;
+	u16 offset = 0;
+
+	// Version
+	*(u32*)(savedata + 0) = VERSION;
+
+	// Discoveries
+	offset = 4;
+	u16 count = Element::Count-1;
+	for (u16 b = 0; b < count; b += 8)
+		*(u8*)(savedata + offset + b/8) = 0;
+	for (u16 b = 0; b < count; b++)
+		*(u8*)(savedata + offset + b/8) |= (discoveredElements[b] ? 1 : 0) << (b % 8);
+
+	// Workspace
+	offset = 128;
+	elementNode_s* node = elementList.first;
+	for (u16 i = 0; node; i += 16+16+16)
+	{
+		*(u16*)(savedata + offset + 00) = (u16) node->elem;
+		*(s16*)(savedata + offset + 16) = node->x;
+		*(s16*)(savedata + offset + 32) = node->y;
+		node = node->next;
+	}
+
+}
+
+
+
+// ------------------------------------
 AlchemyScene::AlchemyScene() : Scene() { }
 // ------------------------------------
 
@@ -444,7 +590,8 @@ void AlchemyScene::initialize()
 	el_init();
 
 	if (!elemTiles) elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
-	if (!workBackground) workBackground = sf2d_create_texture_mem_RGBA8(ImageManager::workBackground_img.pixel_data, ImageManager::workBackground_img.width, ImageManager::workBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
+	if (!workspaceBackground) workspaceBackground = sf2d_create_texture_mem_RGBA8(ImageManager::workspaceBackground_img.pixel_data, ImageManager::workspaceBackground_img.width, ImageManager::workspaceBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
+	if (!libraryBackground) libraryBackground = sf2d_create_texture_mem_RGBA8(ImageManager::libraryBackground_img.pixel_data, ImageManager::libraryBackground_img.width, ImageManager::libraryBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
 	
 	el_createNode(Element::DoubleRainbow);
 	el_createNode(Element::Horse);
@@ -469,7 +616,8 @@ void AlchemyScene::destroy()
 	el_freeNodes();
 
 	if (elemTiles) sf2d_free_texture(elemTiles);
-	if (workBackground) sf2d_free_texture(workBackground);
+	if (workspaceBackground) sf2d_free_texture(workspaceBackground);
+	if (libraryBackground) sf2d_free_texture(libraryBackground);
 }
 
 
@@ -477,7 +625,7 @@ void AlchemyScene::destroy()
 void AlchemyScene::drawTopScreen()
 // ------------------------------------
 {
-	// Empty
+	el_drawSelectedNode();
 }
 
 
@@ -485,6 +633,10 @@ void AlchemyScene::drawTopScreen()
 void AlchemyScene::drawBottomScreen()
 // ------------------------------------
 {
+	// Library
+	el_drawLibrary();
+
+	// Workspace
 	el_drawNodes();
 }
 
@@ -492,36 +644,85 @@ void AlchemyScene::drawBottomScreen()
 void AlchemyScene::updateInput(const keystate_s& ks)
 // ------------------------------------
 {
+	{
+		if (ks.held & KEY_UP)
+		{
+			libraryOffset += 8;
+			if (libraryOffset >= discoveredElementCount * ELEMENT_SIZE - 240) libraryOffset = discoveredElementCount * ELEMENT_SIZE - 240;
+		}
+
+		if (ks.held & KEY_DOWN)
+		{
+			libraryOffset -= 8;
+			if (libraryOffset < 0) libraryOffset = 0;
+		}
+	}
+
+	if (ks.down & (KEY_L | KEY_X))
+	{
+		if (selectedNode)
+		{
+			elementNode_s* node = el_createNode(selectedNode->elem);
+			node->x = selectedNode->x;
+			node->y = selectedNode->y;
+			el_pushNodeFirst(selectedNode);
+		}
+	}
+
 	if (ks.down & KEY_A)
 	{
 		el_discoverElement(Element::Steam);
+		el_discoverElement(Element::Hurricane);
+		el_discoverElement(Element::Aquarium);
+		el_discoverElement(Element::Time);
+		el_discoverElement(Element::Campfire);
+		el_discoverElement(Element::Greenhouse);
+		el_discoverElement(Element::Swamp);
+		el_discoverElement(Element::SteamEngine);
+		el_discoverElement(Element::Cow);
 	}
 
 	if (ks.down & KEY_B)
 	{
-		consoleClear();
+		// consoleClear();
 	}
 
 	if (ks.down & KEY_X)
 	{
-		el_resetDiscoveredElements();
+
 	}
 
 	if (ks.down & KEY_Y)
 	{
-		el_updateDiscoveries();
-		printf("Discovered elements:\n");
-		for (u16 i = 0; i < discoveredElementCount; i++)
-		{
-			printf("%s ", elementNames[elementDiscoveries[i]]);
-		}
-		printf("\n");
+		el_drawLibrary();
+
+		// el_updateDiscoveries();
+		// printf("Discovered elements:\n");
+		// for (u16 i = 0; i < discoveredElementCount; i++)
+		// {
+		// 	printf("%s ", elementNames[elementDiscoveries[i]]);
+		// }
+		// printf("\n");
 	}
 
 	{
 		if (ks.down & KEY_TOUCH)
 		{
-			el_selectNode(ks.touch.px, ks.touch.py);
+			// In the workspace
+			if (withinRectangle(ks.touch.px, ks.touch.py, 0, 0, 256, 240))
+			{
+				el_selectNode(ks.touch.px, ks.touch.py);
+			}
+			if (withinRectangle(ks.touch.px, ks.touch.py, 256, 0, 64, 240))
+			{
+				element_t elem = el_selectedLibraryElement(ks.touch.px, ks.touch.py);
+				printf("%s\n", elementNames[elem]);
+				if (elem != Element::None && elem < Element::Count)
+					selectedNode = el_createNode(elem);
+			}
+
+			originalTouch = ks.touch;
+			currentTouch = ks.touch;
 		}
 		
 		if (ks.held & KEY_TOUCH)
@@ -530,14 +731,32 @@ void AlchemyScene::updateInput(const keystate_s& ks)
 			{
 				el_moveSelectedNode(ks.touch.px, ks.touch.py);
 			}
+
+			currentTouch = ks.touch;
 		}
 
 		if (ks.up & KEY_TOUCH)
 		{
-			if (el_isNodeSelected())
+			// In the workspace
+			if (withinRectangle(currentTouch.px, currentTouch.py, 0, 0, 256, 240))
 			{
-				el_deselectNode();
+				if (el_isNodeSelected())
+				{
+					el_deselectNode();
+				}
 			}
+
+			// In the library
+			if (withinRectangle(currentTouch.px, currentTouch.py, 256, 0, 64, 240))
+			{
+				if (el_isNodeSelected())
+				{
+					el_destroySelectedNode();
+				}
+			}
+
+			originalTouch = { 0, 0 };
+			currentTouch = { 0, 0 };
 		}
 	}
 }

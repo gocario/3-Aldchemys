@@ -5,7 +5,7 @@
 
 namespace Element
 {
-	enum element_e
+	enum element_e : u16
 	{
 		None = 0,
 		
