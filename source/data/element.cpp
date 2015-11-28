@@ -3,6 +3,7 @@
 const char* elementNames[] =
 {
 	"None",
+
 	"Water", // 1
 	"Fire", // 2
 	"Earth", // 3
@@ -590,5 +591,6 @@ const char* elementNames[] =
 	"Pencil sharpener", // 585
 	"Sewing machine", // 586
 	"Don quixote", // 587
+	
 	"Count",
 };

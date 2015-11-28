@@ -1,5 +1,6 @@
 #include <sf2d.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "keystate.h"
 #include "scene/alchemy_scene.hpp"
@@ -16,6 +17,9 @@ int main(int argc, char **argv)
 	printf("Sizeof report:\n");
 	printf(" > elementNode: %i\n", sizeof(elementNode_s));
 	printf(" > elementList: %i\n", sizeof(elementList_s));
+
+	printf(" %2i | %2i |", strcmp("ab", "aa"), strcmp("ab", "ac"));
+	printf(" %2i | %2i \n", strcmp("a ", "aA"), strcmp("a ", "aa"));
 
 	AlchemyScene scene;
 	scene.initialize();

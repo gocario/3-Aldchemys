@@ -46,6 +46,15 @@ void el_removeNode(elementNode_s* node);
 void el_addNode(elementNode_s* node);
 void el_pushNodeFirst(elementNode_s* node);
 
+
+void el_discoverElement(element_t elem);
+bool el_isElementDiscovered(element_t eleme);
+u16 el_discoveredElementCount();
+void el_resetDiscoveredElements();
+void el_emptyDiscoveries();
+void el_fillDiscoveries();
+void el_updateDiscoveries();
+
 void el_drawNode(elementNode_s* node);
 void el_drawNodes();
 void el_freeNode(elementNode_s* node);
@@ -59,6 +68,10 @@ void el_freeNodes();
 
 extern elementList_s elementList;
 extern elementNode_s* selectedNode;
+
+extern u16 discoveredElementCount;
+extern bool discoveredElements[];
+extern element_t elementDiscoveries[];
 
 extern sf2d_texture* workBackground;
 extern sf2d_texture* elemTiles;

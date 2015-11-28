@@ -2,9 +2,15 @@
 #include "data/images.hpp"
 
 #include <stdio.h>
+#include <string.h>
 
 elementList_s elementList;
 elementNode_s* selectedNode = NULL;
+
+u16 discoveredElementCount = 0;
+bool discoveredElements[Element::Count-1];
+element_t elementDiscoveries[Element::Count-2];
+
 sf2d_texture* workBackground = NULL;
 sf2d_texture* elemTiles = NULL;
 
@@ -63,15 +69,15 @@ void el_deselectNode()
 				el_freeNode(node);
 				el_freeNode(selectedNode);
 
+				el_discoverElement(elem);
 				node = el_createNode(elem);
 				node->x = x;
 				node->y = y;
 
 				node = NULL;
 				selectedNode = NULL;
-				// Place the break here to continue propagation
 			}
-			// Place the break here to stop propagation
+
 			break;
 		}
 		node = node->next;
@@ -140,6 +146,7 @@ void el_init()
 // ------------------------------------
 {
 	el_freeNodes();
+	el_resetDiscoveredElements();
 }
 
 
@@ -219,6 +226,143 @@ void el_pushNodeFirst(elementNode_s* node)
 		el_addNode(node);
 	}
 }
+
+
+
+// ------------------------------------
+void el_discoverElement(element_t elem)
+// ------------------------------------
+{
+#ifdef DEBUG_PRINT
+	printf("%s discovered\n", elementNames[elem]);
+#endif
+	if (!discoveredElements[elem])
+	{
+		discoveredElementCount++;
+		discoveredElements[elem] = true;
+		el_updateDiscoveries();
+	}
+}
+
+
+// ------------------------------------
+bool el_isElementDiscovered(element_t elem)
+// ------------------------------------
+{
+	return discoveredElements[elem];
+}
+
+// ------------------------------------
+u16 el_discoveredElementCount()
+// ------------------------------------
+{
+	discoveredElementCount = 0;
+
+	u16 count = Element::Count-2;
+	for (u16 i = 1; i < count; i++)
+	{
+		if (discoveredElements[i])
+		{
+			discoveredElementCount++;
+		}
+	}
+	
+	return discoveredElementCount;
+}
+
+
+// ------------------------------------
+void el_resetDiscoveredElements()
+// ------------------------------------
+{
+#ifdef DEBUG_PRINT
+	printf("Discovered elements resetted\n");
+#endif
+	u16 count = Element::Count-2;
+	u16 i = 0;
+	for (; i < Element::None+1; i++)
+	{
+		discoveredElements[i] = true;
+	}
+	for (; i < Element::Air+1; i++)
+	{
+		discoveredElements[i] = true;
+	}
+	for (; i < count; i++)
+	{
+		discoveredElements[i] = false;
+	}
+	discoveredElementCount = Element::Air;
+}
+
+
+// ------------------------------------
+void el_emptyDiscoveries()
+// ------------------------------------
+{
+	u16 count = Element::Count-2;
+	for (u16 i = 0; i < count; i++)
+	{
+		elementDiscoveries[i] = Element::None;
+	}
+}
+
+
+// ------------------------------------
+void el_fillDiscoveries()
+// ------------------------------------
+{
+	const char* actualWord;
+	const char* minWord = "\x01";
+	const char* maxWord = "\x7F";
+	u16 count = Element::Count-1;
+
+	element_t elem = Element::None;
+	u16 i, j;
+	for (i = 0; i < discoveredElementCount; i++)
+	{
+		for (j = 1; j < count; j++)
+		{
+			if (discoveredElements[j])
+			{
+				actualWord = elementNames[j];
+
+				// printf("New actualWord: %s", actualWord);
+				// printf("  %2i %2i\n", strcmp(actualWord, minWord), strcmp(actualWord, maxWord));
+
+				if ((strcmp(actualWord, minWord) > 0) && (strcmp(actualWord, maxWord) < 0))
+				{
+					maxWord = actualWord;
+					elem = (element_t) j;
+					// printf("New maxWord: %s (%s)\n", maxWord, elementNames[elem]);
+				}
+			}
+		}
+
+		// svcSleepThread(1000000000L);
+		// printf("\n");
+
+		minWord = maxWord;
+		maxWord = "\x7F";
+
+		elementDiscoveries[i] = elem;
+	}
+
+	if (discoveredElementCount < count)
+	{
+		elementDiscoveries[i] = Element::None;
+	}
+}
+
+
+// ------------------------------------
+void el_updateDiscoveries()
+// ------------------------------------
+{
+	el_emptyDiscoveries();
+	el_fillDiscoveries();
+}
+
 
 
 // ------------------------------------
@@ -348,9 +492,30 @@ void AlchemyScene::drawBottomScreen()
 void AlchemyScene::updateInput(const keystate_s& ks)
 // ------------------------------------
 {
+	if (ks.down & KEY_A)
+	{
+		el_discoverElement(Element::Steam);
+	}
+
+	if (ks.down & KEY_B)
+	{
+		consoleClear();
+	}
+
 	if (ks.down & KEY_X)
 	{
-		el_createNode(Element::Fire);
+		el_resetDiscoveredElements();
+	}
+
+	if (ks.down & KEY_Y)
+	{
+		el_updateDiscoveries();
+		printf("Discovered elements:\n");
+		for (u16 i = 0; i < discoveredElementCount; i++)
+		{
+			printf("%s ", elementNames[elementDiscoveries[i]]);
+		}
+		printf("\n");
 	}
 
 	{
