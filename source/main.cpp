@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	sf2d_set_clear_color(RGBA8(0xF5, 0xF2, 0xEF, 0xFF));
 
 	// Initialize console on top screen
-	consoleInit(GFX_TOP, NULL);
+	// consoleInit(GFX_TOP, NULL);
 
 	printf("Sizeof report:\n");
 	printf(" > elementNode: %i\n", sizeof(elementNode_s));
