@@ -301,20 +301,27 @@ void el_resetDiscoveredElements()
 #ifdef DEBUG_PRINT
 	printf("Discovered elements resetted\n");
 #endif
-	u16 count = Element::Count-2;
 	u16 i = 0;
-	for (; i < Element::None+1; i++)
-	{
-		discoveredElements[i] = true;
-	}
-	for (; i < Element::Air+1; i++)
-	{
-		discoveredElements[i] = true;
-	}
-	for (; i < count; i++)
-	{
+	// for (; i < Element::None+1; i++)
+	// 	discoveredElements[i] = true;
+	// for (; i < Element::Air+1; i++)
+	// 	discoveredElements[i] = true;
+	for (; i < Element::Count-2; i++)
 		discoveredElements[i] = false;
-	}
+
+	el_discoverBasicElements();
+}
+
+
+// ------------------------------------
+void el_discoverBasicElements()
+// ------------------------------------
+{
+	u16 i = 0;
+	for(; i < Element::None+1; i++)
+		discoveredElements[i] = true;
+	for (; i < Element::Air+1; i++)
+		discoveredElements[i] = true;
 	discoveredElementCount = Element::Air;
 
 	el_updateDiscoveries();
@@ -419,13 +426,12 @@ void el_drawLibrary()
 	for (u16 i = 0; i < 8; i++)
 	{
 		index = i + (libraryOffset) / ELEMENT_SIZE;
-		// printf("%i\n", index);
+
 		if (index >= 0 && index < discoveredElementCount)
 		{
 			el_drawElement(elementDiscoveries[index], 272, index * TILE_SIZE - libraryOffset);
 		}
 	}
-	// printf("\n");
 }
 
 
@@ -497,7 +503,7 @@ void el_readSavefile()
 	u8* savedata = savebuffer;
 	char path[] = "/alambic.sav";
 	if (FS_ReadFile(path, savedata, &sdmcArchive, &sdmcHandle, &bytesRead, SAVE_SIZE))
-		el_writeSavefile();
+		printf("Save file not found!\n");
 	else
 		printf("%lu bytes read\n", bytesRead);
 }
@@ -521,28 +527,31 @@ void el_readSavedata()
 {
 	u8* savedata = savebuffer;
 	u16 offset = 0;
+	u16 i;
 
 	// Version
-	// u32 version = *(u32*)(savedata + 0);
+	offset = VERSION_OFFSET;
+	// u32 version = *(u32*)(savedata + offset);
 
 	// Discoveries
-	offset = 4;
+	offset = DISCOVERIES_OFFSET;
 	u16 count = Element::Count-1;
 	for (u16 b = 0; b < count; b++)
 		discoveredElements[b] = ((savedata[offset + b/8] >> (b % 8)) & 0x1) == 1;
 
 	// Workspace
-	offset = 128;
+	offset = WORKSPACE_OFFSET;
 	element_t elem;
 	elementNode_s* node;
-	for (u16 i = 0; i < 2400; i += 16+16+16)
+	for (i = 0; i < WORKSPACE_SIZE; i += 2+2+2)
 	{
-		elem = (element_t) (*(u16*)(savedata + offset + i));
+		elem = (element_t) (*(u16*)(savedata + offset + i + 0));
 		if (elem == Element::None) break;
 
 		node = el_createNode(elem);
-		node->x = *(s16*)(savedata + offset + i + 16);
-		node->y = *(s16*)(savedata + offset + i + 32);
+		node->x = *(s16*)(savedata + offset + i + 2);
+		node->y = *(s16*)(savedata + offset + i + 4);
+		printf("%s { %2i, %2i }\n", elementNames[node->elem], node->x, node->y);
 	}
 }
 
@@ -554,12 +563,14 @@ void el_writeSavedata()
 {
 	u8* savedata = savebuffer;
 	u16 offset = 0;
+	u16 i;
 
 	// Version
-	*(u32*)(savedata + 0) = VERSION;
+	offset = VERSION_OFFSET;
+	*(u32*)(savedata + offset) = VERSION;
 
 	// Discoveries
-	offset = 4;
+	offset = DISCOVERIES_OFFSET;
 	u16 count = Element::Count-1;
 	for (u16 b = 0; b < count; b += 8)
 		*(u8*)(savedata + offset + b/8) = 0;
@@ -567,19 +578,27 @@ void el_writeSavedata()
 		*(u8*)(savedata + offset + b/8) |= (discoveredElements[b] ? 1 : 0) << (b % 8);
 
 	// Workspace
-	offset = 128;
-	u16 i;
+	offset = WORKSPACE_OFFSET;
 	elementNode_s* node = elementList.first;
-	for (i = 0; i < 2400 && node; i += 16+16+16)
+	for (i = 0; i < WORKSPACE_SIZE && node; i += 2+2+2)
 	{
-		*(u16*)(savedata + offset + 00) = (u16) node->elem;
-		*(s16*)(savedata + offset + 16) = node->x;
-		*(s16*)(savedata + offset + 32) = node->y;
+		// printf("{ %s, %2i, %2i }\n", elementNames[node->elem], node->x, node->y);
+		*(u16*)(savedata + offset + i + 0) = (u16) node->elem;
+		*(s16*)(savedata + offset + i + 2) = node->x;
+		*(s16*)(savedata + offset + i + 4) = node->y;
+		printf("{ %s, %2i, %2i }\n", elementNames[*(u16*)(savedata + offset + i + 0)], *(s16*)(savedata + offset + i + 2), *(s16*)(savedata + offset + i + 4));
 		node = node->next;
 	}
-	for (; i < 2400; i += 16)
+	for (; i < WORKSPACE_SIZE; i++)
 	{
-		*(u16*)(savedata + offset) = 0x0000;
+		*(u8*)(savedata + offset + i) = 0x00;
+	}
+
+	// Padding
+	offset = PADDING_OFFSET;
+	for(i = 0; i < PADDING_SIZE; i++)
+	{
+		*(u8*)(savedata + offset + i) = 0x00;
 	}
 }
 
@@ -603,25 +622,27 @@ void AlchemyScene::initialize()
 
 	FS_FilesysInit();
 	el_readSavefile();
-	// el_readSavedata();
+	el_readSavedata();
 
+	el_discoverBasicElements();
+	el_discoveredElementCount();
 	el_updateDiscoveries();
 
 	if (!elemTiles) elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
 	if (!workspaceBackground) workspaceBackground = sf2d_create_texture_mem_RGBA8(ImageManager::workspaceBackground_img.pixel_data, ImageManager::workspaceBackground_img.width, ImageManager::workspaceBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
 	if (!libraryBackground) libraryBackground = sf2d_create_texture_mem_RGBA8(ImageManager::libraryBackground_img.pixel_data, ImageManager::libraryBackground_img.width, ImageManager::libraryBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
 	
-	el_createNode(Element::DoubleRainbow);
-	el_createNode(Element::Horse);
-	el_createNode(Element::Fire);
-	el_createNode(Element::Water);
-	el_createNode(Element::Lava);
-	el_createNode(Element::Water);
-	el_createNode(Element::Fire);
-	el_createNode(Element::Earth);
-	el_createNode(Element::Earth);
-	el_createNode(Element::Earth);
-	el_createNode(Element::Earth);
+	// el_createNode(Element::DoubleRainbow);
+	// el_createNode(Element::Horse);
+	// el_createNode(Element::Fire);
+	// el_createNode(Element::Water);
+	// el_createNode(Element::Lava);
+	// el_createNode(Element::Water);
+	// el_createNode(Element::Fire);
+	// el_createNode(Element::Earth);
+	// el_createNode(Element::Earth);
+	// el_createNode(Element::Earth);
+	// el_createNode(Element::Earth);
 
 	printf("Scene initialized!\n");
 }
@@ -631,7 +652,7 @@ void AlchemyScene::initialize()
 void AlchemyScene::destroy()
 // ------------------------------------
 {
-	// el_writeSavedata();
+	el_writeSavedata();
 	el_writeSavefile();
 	FS_FilesysExit();
 

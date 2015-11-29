@@ -16,7 +16,21 @@
 #define VERSION_MAJ 1
 #define VERSION VERSION_SUB+10*(VERSION_MIN+10*(VERSION_MAJ))
 
-#define SAVE_SIZE 0x9FE
+
+#define VERSION_OFFSET 0
+#define VERSION_SIZE 4
+
+#define DISCOVERIES_OFFSET VERSION_OFFSET + VERSION_SIZE
+#define DISCOVERIES_SIZE 124
+
+#define WORKSPACE_OFFSET DISCOVERIES_OFFSET + DISCOVERIES_SIZE
+#define WORKSPACE_SIZE 2400
+
+#define PADDING_OFFSET WORKSPACE_OFFSET + WORKSPACE_SIZE
+#define PADDING_SIZE 32
+
+#define SAVE_SIZE PADDING_OFFSET + PADDING_SIZE
+// #define SAVE_SIZE 0xA00
 
 struct elementNode_s
 {
@@ -62,6 +76,7 @@ void el_discoverElement(element_t elem);
 bool el_isElementDiscovered(element_t eleme);
 u16 el_discoveredElementCount();
 void el_resetDiscoveredElements();
+void el_discoverBasicElements();
 void el_emptyDiscoveries();
 void el_fillDiscoveries();
 void el_updateDiscoveries();
