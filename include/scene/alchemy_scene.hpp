@@ -16,6 +16,8 @@
 #define VERSION_MAJ 1
 #define VERSION VERSION_SUB+10*(VERSION_MIN+10*(VERSION_MAJ))
 
+#define SAVE_SIZE 0x9FE
+
 struct elementNode_s
 {
 	element_t elem;
@@ -77,6 +79,7 @@ void el_writeSavedata();
 void el_readSavefile();
 void el_writeSavefile();
 
+extern u8 savebuffer[];
 
 extern elementList_s elementList;
 extern elementNode_s* selectedNode;

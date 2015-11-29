@@ -6,6 +6,8 @@
 
 #include "fs.h"
 
+u8 savebuffer[SAVE_SIZE];
+
 elementList_s elementList;
 elementNode_s* selectedNode = NULL;
 
@@ -491,7 +493,13 @@ void el_freeNodes()
 void el_readSavefile()
 // ------------------------------------
 {
-	// u8* savedata = NULL;
+	u32 bytesRead;
+	u8* savedata = savebuffer;
+	char path[] = "/alambic.sav";
+	if (FS_ReadFile(path, savedata, &sdmcArchive, &sdmcHandle, &bytesRead, SAVE_SIZE))
+		el_writeSavefile();
+	else
+		printf("%lu bytes read\n", bytesRead);
 }
 
 
@@ -499,7 +507,11 @@ void el_readSavefile()
 void el_writeSavefile()
 // ------------------------------------
 {
-	
+	u32 bytesWritten;
+	u8* savedata = savebuffer;
+	char path[] = "/alambic.sav";
+	FS_WriteFile(path, savedata, &sdmcArchive, &sdmcHandle, &bytesWritten, SAVE_SIZE);
+	printf("%lu bytes written\n", bytesWritten);
 }
 
 
@@ -507,10 +519,8 @@ void el_writeSavefile()
 void el_readSavedata()
 // ------------------------------------
 {
-	u8* savedata = NULL;
+	u8* savedata = savebuffer;
 	u16 offset = 0;
-
-	el_init();
 
 	// Version
 	// u32 version = *(u32*)(savedata + 0);
@@ -525,7 +535,7 @@ void el_readSavedata()
 	offset = 128;
 	element_t elem;
 	elementNode_s* node;
-	for (u16 i = 0; ; i += 16+16+16)
+	for (u16 i = 0; i < 2400; i += 16+16+16)
 	{
 		elem = (element_t) (*(u16*)(savedata + offset + i));
 		if (elem == Element::None) break;
@@ -534,15 +544,15 @@ void el_readSavedata()
 		node->x = *(s16*)(savedata + offset + i + 16);
 		node->y = *(s16*)(savedata + offset + i + 32);
 	}
-
 }
+
 
 
 // ------------------------------------
 void el_writeSavedata()
 // ------------------------------------
 {
-	u8* savedata = NULL;
+	u8* savedata = savebuffer;
 	u16 offset = 0;
 
 	// Version
@@ -558,15 +568,19 @@ void el_writeSavedata()
 
 	// Workspace
 	offset = 128;
+	u16 i;
 	elementNode_s* node = elementList.first;
-	for (u16 i = 0; node; i += 16+16+16)
+	for (i = 0; i < 2400 && node; i += 16+16+16)
 	{
 		*(u16*)(savedata + offset + 00) = (u16) node->elem;
 		*(s16*)(savedata + offset + 16) = node->x;
 		*(s16*)(savedata + offset + 32) = node->y;
 		node = node->next;
 	}
-
+	for (; i < 2400; i += 16)
+	{
+		*(u16*)(savedata + offset) = 0x0000;
+	}
 }
 
 
@@ -585,9 +599,13 @@ AlchemyScene::~AlchemyScene() { }
 void AlchemyScene::initialize()
 // ------------------------------------
 {
-	printf("Scene initialized!\n");
-
 	el_init();
+
+	FS_FilesysInit();
+	el_readSavefile();
+	// el_readSavedata();
+
+	el_updateDiscoveries();
 
 	if (!elemTiles) elemTiles = sf2d_create_texture_mem_RGBA8(ImageManager::elemTiles_img.pixel_data, ImageManager::elemTiles_img.width, ImageManager::elemTiles_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
 	if (!workspaceBackground) workspaceBackground = sf2d_create_texture_mem_RGBA8(ImageManager::workspaceBackground_img.pixel_data, ImageManager::workspaceBackground_img.width, ImageManager::workspaceBackground_img.height, TEXFMT_RGBA8, SF2D_PLACE_RAM);
@@ -604,6 +622,8 @@ void AlchemyScene::initialize()
 	el_createNode(Element::Earth);
 	el_createNode(Element::Earth);
 	el_createNode(Element::Earth);
+
+	printf("Scene initialized!\n");
 }
 
 
@@ -611,13 +631,17 @@ void AlchemyScene::initialize()
 void AlchemyScene::destroy()
 // ------------------------------------
 {
-	printf("Scene destroyed!\n");
+	// el_writeSavedata();
+	el_writeSavefile();
+	FS_FilesysExit();
 
 	el_freeNodes();
 
 	if (elemTiles) sf2d_free_texture(elemTiles);
 	if (workspaceBackground) sf2d_free_texture(workspaceBackground);
 	if (libraryBackground) sf2d_free_texture(libraryBackground);
+
+	printf("Scene destroyed!\n");
 }
 
 
@@ -694,15 +718,13 @@ void AlchemyScene::updateInput(const keystate_s& ks)
 
 	if (ks.down & KEY_Y)
 	{
-		el_drawLibrary();
-
-		// el_updateDiscoveries();
-		// printf("Discovered elements:\n");
-		// for (u16 i = 0; i < discoveredElementCount; i++)
-		// {
-		// 	printf("%s ", elementNames[elementDiscoveries[i]]);
-		// }
-		// printf("\n");
+		el_updateDiscoveries();
+		printf("Discovered elements:\n");
+		for (u16 i = 0; i < discoveredElementCount; i++)
+		{
+			printf("%s ", elementNames[elementDiscoveries[i]]);
+		}
+		printf("\n");
 	}
 
 	{

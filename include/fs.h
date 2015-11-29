@@ -1,7 +1,7 @@
 #ifndef FS_H
 #define FS_H
 
-#include <3ds/services/fs.h>
+#include <3ds.h>
 
 extern Result fsInitialized;
 extern Handle sdmcHandle;

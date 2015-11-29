@@ -52,6 +52,23 @@ int main(int argc, char **argv)
 	
 	scene.destroy();
 
+	while(aptMainLoop())
+	{
+		hidKeys(&ks);
+
+		// Draw the bottom screen
+		sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
+
+		sf2d_end_frame();
+
+		// Swap the buffers
+		sf2d_swapbuffers();
+
+		// Exit the loop
+		if (ks.down & KEY_SELECT) break;
+	}
+
+
 	// Stop sf2dlib
 	sf2d_fini();
 
